@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+cd `dirname $0`/..
+
+check_exec() {
+    which $1 > /dev/null
+    if [ $? != 0 ] ; then
+        echo "Could not find $1 executable"
+        echo "$2"
+        exit -1
+    fi
+}
+
+check_exec go "Go to: https://golang.org/doc/install"
+check_exec goimports "Execute: go get golang.org/x/tools/cmd/goimports"
+check_exec ginkgo "Execute: go get github.com/onsi/ginkgo/ginkgo"
+
+set -e
+
+goimports -w=true .
+go fmt ./...
+ginkgo -r -race
